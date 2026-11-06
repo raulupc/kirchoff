@@ -64,9 +64,6 @@ input[type=text]{width:100%;font:inherit;font-size:16px;padding:12px 14px;border
 .cancel{background:var(--input);color:var(--ink)}
 .err{color:#d3202c;font-size:14px;margin:12px 0 0}
 header,main{zoom:.82}
-.btn.fs{width:36px;height:36px;color:var(--blue)}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:88%;background:#26294a;color:#fff;font-size:14px;line-height:1.4;padding:12px 16px;border-radius:12px;z-index:9;text-align:center}
-.toast[hidden]{display:none}
 body.setup .app{visibility:hidden}
 body.setup .scrim{display:none}
 body.setup .sheet{height:100%;max-height:100%;border-radius:0;transform:translate(-50%,0);padding-top:calc(28px + env(safe-area-inset-top,0px));background:linear-gradient(180deg,var(--bg),var(--bg2))}
@@ -91,9 +88,6 @@ body.setup .sheet h2{font:400 34px/1 "Bebas Neue",Impact,sans-serif}
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
     <h1>TIU VIRTUAL</h1>
-    <button class="btn fs" id="fs" aria-label="Pantalla completa">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-    </button>
   </header>
 
   <main>
@@ -243,24 +237,6 @@ body.setup .sheet h2{font:400 34px/1 "Bebas Neue",Impact,sans-serif}
     $("sheetTitle").textContent="TIU VIRTUAL";$("sheetHint").hidden=false;
     open();
   }
-
-  // Pantalla completa
-  var de=document.documentElement,fsBtn=$("fs"),toast=document.createElement("div"),tt;
-  toast.className="toast";toast.hidden=true;document.body.appendChild(toast);
-  function say(t){toast.textContent=t;toast.hidden=false;clearTimeout(tt);tt=setTimeout(function(){toast.hidden=true},6500)}
-  var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone;
-  if(standalone)fsBtn.hidden=true;
-  function inFs(){return document.fullscreenElement||document.webkitFullscreenElement}
-  fsBtn.onclick=function(){
-    var req=de.requestFullscreen||de.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
-    if(inFs()){ex.call(document);return}
-    var tip="En iPhone: toca Compartir y elige \u201cA\u00f1adir a pantalla de inicio\u201d. Al abrirla desde ah\u00ed se ve a pantalla completa, sin barra del navegador.";
-    if(!req){say(tip);return}
-    try{
-      var r=req.call(de);
-      if(r&&r.catch)r.catch(function(){say(tip)});
-    }catch(e){say(tip)}
-  };
 })();
 </script>
 </body>
