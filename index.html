@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TIU Virtual</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TIU Virtual">
+<meta name="theme-color" content="#f3f4fc">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4fc; --bg2:#eceefb; --cloud:#d6d9f6; --pill:#dcdbfd; --ink:#111; --muted:#4a5568;
+  --card:#fff; --red:#f0414b; --brand:#d3202c; --blue:#3b4660; --line:#e3e5f3; --input:#f6f7fd;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root{color-scheme:light}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+.app{position:relative;height:100%;max-width:480px;margin:0 auto;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.sky{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.track{position:absolute;left:0;top:0;height:100%;width:200%;display:flex;animation:drift 5s linear infinite}
+.track .half{position:relative;width:50%;height:100%;flex:none}
+.cloud{position:absolute;fill:var(--cloud)}
+@keyframes drift{to{transform:translateX(-50%)}}
+.ground{position:absolute;left:0;right:0;bottom:0;height:34%;pointer-events:none}
+header{position:relative;z-index:2;width:100%;display:flex;align-items:center;gap:14px;padding:14px 20px 0}
+.btn{width:40px;height:40px;border-radius:50%;border:0;background:var(--card);display:grid;place-items:center;cursor:pointer;color:var(--brand);box-shadow:0 1px 4px rgba(40,40,90,.12)}
+.btn:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #6c63ff;outline-offset:2px}
+h1{font:400 28px/1 "Bebas Neue",Impact,sans-serif;letter-spacing:.3px;margin:0;flex:1}
+main{position:relative;z-index:2;flex:1;width:100%;display:flex;flex-direction:column;align-items:center;padding:0 18px calc(18px + env(safe-area-inset-bottom,0px));min-height:0}
+.clock{margin-top:clamp(14px,4vh,34px);background:var(--pill);border-radius:14px;padding:6px 40px;font-size:clamp(40px,12vw,56px);font-weight:400;letter-spacing:1px;font-variant-numeric:tabular-nums;text-align:center}
+.date{margin-top:14px;color:var(--muted);font-size:18px}
+.photo{margin-top:clamp(18px,5vh,44px);width:clamp(150px,34vw,176px);aspect-ratio:1;border-radius:50%;background:#fff;overflow:hidden;display:grid;place-items:center;border:0;padding:0;cursor:pointer;flex:none}
+.photo img,.photo svg{width:100%;height:100%;object-fit:cover;display:block}
+.card{margin-top:auto;width:100%;background:var(--card);border-radius:18px;padding:22px 14px 26px;text-align:center;box-shadow:0 2px 14px rgba(60,60,130,.08)}
+.name{font-family:Oswald,"Bebas Neue",Impact,sans-serif;font-weight:400;letter-spacing:.5px;color:var(--red);white-space:nowrap;line-height:1.05;font-size:46px;margin:0 0 8px;text-transform:uppercase}
+.lbl{font-size:18px;margin:0}
+.val{font-size:24px;font-weight:500;color:var(--blue);margin:2px 0 14px;letter-spacing:.2px}
+.career{font-size:21px;font-weight:500;color:var(--blue);margin:8px 0 12px;text-transform:uppercase}
+.campus{display:flex;gap:8px;align-items:center;justify-content:center;font-size:20px}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,10,30,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:5}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;width:100%;max-width:480px;transform:translate(-50%,105%);transition:transform .25s ease;background:var(--card);border-radius:22px 22px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));z-index:6;max-height:92%;overflow:auto}
+.sheet.on{transform:translate(-50%,0)}
+.sheet h2{margin:0 0 14px;font-size:20px}
+label{display:block;font-size:14px;color:var(--muted);margin:12px 0 6px}
+input[type=text]{width:100%;font:inherit;font-size:16px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--input);color:var(--ink)}
+.row{display:flex;gap:10px;align-items:center}
+.thumb{width:56px;height:56px;border-radius:50%;object-fit:cover;background:var(--input);flex:none}
+.file{flex:1;font-size:14px;color:var(--ink)}
+.auto{font-size:14px;color:var(--muted);margin-top:12px}
+.auto b{color:var(--ink)}
+.actions{display:flex;gap:10px;margin-top:18px}
+.actions button{flex:1;font:inherit;font-weight:600;padding:13px;border-radius:12px;border:0;cursor:pointer}
+.save{background:var(--brand);color:#fff}
+.cancel{background:var(--input);color:var(--ink)}
+.err{color:#d3202c;font-size:14px;margin:12px 0 0}
+header,main{zoom:.82}
+.btn.fs{width:36px;height:36px;color:var(--blue)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:88%;background:#26294a;color:#fff;font-size:14px;line-height:1.4;padding:12px 16px;border-radius:12px;z-index:9;text-align:center}
+.toast[hidden]{display:none}
+body.setup .app{visibility:hidden}
+body.setup .scrim{display:none}
+body.setup .sheet{height:100%;max-height:100%;border-radius:0;transform:translate(-50%,0);padding-top:calc(28px + env(safe-area-inset-top,0px));background:linear-gradient(180deg,var(--bg),var(--bg2))}
+body.setup .cancel{display:none}
+body.setup .sheet h2{font:400 34px/1 "Bebas Neue",Impact,sans-serif}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sky" aria-hidden="true"><div class="track" id="track"></div></div>
+  <svg class="ground" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <g fill="var(--cloud)" opacity=".55">
+      <rect x="215" y="40" width="130" height="14" rx="3"/><rect x="225" y="54" width="110" height="60" rx="2"/>
+      <circle cx="280" cy="30" r="16"/>
+      <circle cx="30" cy="70" r="38"/><rect x="26" y="90" width="8" height="90"/>
+      <rect x="370" y="90" width="40" height="90" rx="3"/>
+    </g>
+  </svg>
+
+  <header>
+    <button class="btn" id="settings" aria-label="Editar datos">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <h1>TIU VIRTUAL</h1>
+    <button class="btn fs" id="fs" aria-label="Pantalla completa">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+    </button>
+  </header>
+
+  <main>
+    <div class="clock" id="clock" aria-live="off">00:00:00</div>
+    <div class="date" id="date"></div>
+    <button class="photo" id="photoBtn" aria-label="Cambiar foto"></button>
+    <section class="card">
+      <h2 class="name" id="name" style="margin:0 0 8px"></h2>
+      <p class="lbl">Código de alumno:</p>
+      <p class="val" id="code"></p>
+      <p class="lbl">ID Banner:</p>
+      <p class="val" id="banner" style="margin-bottom:6px"></p>
+      <p class="career" id="career"></p>
+      <div class="campus">
+        <svg width="16" height="20" viewBox="0 0 16 22" aria-hidden="true"><path d="M8 0C3.6 0 0 3.5 0 7.9 0 13.600 8 22 8 22s8-8.400 8-14.100C16 3.500 12.400 0 8 0z" fill="#e5252f"/><circle cx="8" cy="8" r="3" fill="#fff" opacity=".7"/></svg>
+        <span>Campus Monterrico</span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="Editar datos">
+  <h2 id="sheetTitle">Editar mis datos</h2>
+  <p class="auto" id="sheetHint" hidden>Completa tus datos para ver tu TIU. Podrás cambiarlos después.</p>
+  <label>Foto</label>
+  <div class="row">
+    <img class="thumb" id="thumb" alt="">
+    <input class="file" type="file" id="file" accept="image/*">
+  </div>
+  <label for="fName">Nombre completo</label>
+  <input type="text" id="fName" autocomplete="off" placeholder="Nombres y apellidos">
+  <label for="fCode">Código de alumno</label>
+  <input type="text" id="fCode" autocomplete="off" placeholder="U202300000">
+  <label for="fCareer">Carrera</label>
+  <input type="text" id="fCareer" autocomplete="off" placeholder="Ingeniería de Software">
+  <p class="auto">ID Banner (automático): <b id="fBanner"></b></p>
+  <p class="err" id="err" hidden></p>
+  <div class="actions">
+    <button class="cancel" id="cancel">Cancelar</button>
+    <button class="save" id="save">Guardar</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY="tiu-virtual-v1";
+  var def={name:"",code:"",career:"",photo:""};
+  var data=Object.assign({},def),configured=false;
+  try{var s=localStorage.getItem(KEY);if(s){data=Object.assign({},def,JSON.parse(s));configured=!!(data.name&&data.code&&data.career&&data.photo);}}catch(e){}
+  var $=function(i){return document.getElementById(i)};
+  var pendingPhoto=null;
+
+  var avatar='<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#e8e9f8"/><circle cx="50" cy="38" r="18" fill="#b9bdea"/><path d="M14 100c2-26 18-36 36-36s34 10 36 36z" fill="#b9bdea"/></svg>';
+
+  // Nubes: dos mitades idénticas para un bucle continuo hacia la izquierda
+  var spots=[[6,12,90],[40,6,60],[70,19,110],[20,36,70],[58,44,50],[86,31,80],[34,60,100],[78,66,60],[12,76,56]];
+  var cloudSvg=function(x,y,w){
+    return '<svg class="cloud" style="left:'+x+'%;top:'+y+'%;width:'+w+'px" viewBox="0 0 80 32"><path d="M0 32v-1c0-5 4-9 9-9 1 0 2 0 3 .3C13 15 18 11 24 11c3 0 6 1 8 3 2-6 8-10 15-10 9 0 17 7 17 16 0 .6 0 1.200-.1 1.800 6 .5 11 3 11 8v1z"/></svg>';
+  };
+  var half='';spots.forEach(function(p){half+=cloudSvg(p[0],p[1],p[2])});
+  $("track").innerHTML='<div class="half">'+half+'</div><div class="half">'+half+'</div>';
+
+  // Reloj en tiempo real
+  var D=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  var M=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  var p2=function(n){return String(n).padStart(2,"0")};
+  function tick(){
+    var d=new Date();
+    $("clock").textContent=p2(d.getHours())+":"+p2(d.getMinutes())+":"+p2(d.getSeconds());
+    $("date").textContent=D[d.getDay()]+", "+p2(d.getDate())+" "+M[d.getMonth()]+" "+d.getFullYear();
+  }
+  tick();setInterval(tick,250);
+
+  // ID Banner automático a partir del código
+  function banner(code){
+    var h=7;code=(code||"").toUpperCase();
+    for(var i=0;i<code.length;i++){h=(h*31+code.charCodeAt(i))>>>0}
+    return "N0"+String(h%10000000).padStart(7,"0");
+  }
+
+  function fit(){
+    var el=$("name"),max=Math.min(46,Math.round(window.innerWidth*0.115));
+    el.style.fontSize=max+"px";
+    var avail=el.parentElement.clientWidth-28;
+    while(el.scrollWidth>avail&&max>16){max-=1;el.style.fontSize=max+"px"}
+  }
+
+  function render(){
+    $("name").textContent=data.name;
+    $("code").textContent=data.code;
+    $("banner").textContent=banner(data.code);
+    $("career").textContent=data.career;
+    $("photoBtn").innerHTML=data.photo?'<img alt="Foto de perfil" src="'+data.photo+'">':avatar;
+    fit();
+  }
+  render();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  window.addEventListener("resize",fit);
+
+  // Hoja de edición
+  function open(){
+    pendingPhoto=null;
+    $("fName").value=data.name;$("fCode").value=data.code;$("fCareer").value=data.career;
+    $("fBanner").textContent=banner(data.code);
+    $("thumb").src=data.photo||"data:image/svg+xml;utf8,"+encodeURIComponent(avatar.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '));
+    $("file").value="";
+    $("scrim").classList.add("on");$("sheet").classList.add("on");
+  }
+  function close(){$("scrim").classList.remove("on");$("sheet").classList.remove("on")}
+  $("settings").onclick=open;$("photoBtn").onclick=open;
+  $("scrim").onclick=close;$("cancel").onclick=close;
+  $("fCode").addEventListener("input",function(){$("fBanner").textContent=banner($("fCode").value.trim())});
+
+  // Foto: recorte cuadrado y reducción para guardar ligera
+  $("file").addEventListener("change",function(e){
+    var f=e.target.files&&e.target.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        var s=Math.min(img.width,img.height),c=document.createElement("canvas");
+        c.width=c.height=420;
+        c.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,420,420);
+        pendingPhoto=c.toDataURL("image/jpeg",.88);
+        $("thumb").src=pendingPhoto;
+      };
+      img.src=r.result;
+    };
+    r.readAsDataURL(f);
+  });
+
+  $("save").onclick=function(){
+    var n=$("fName").value.trim(),c=$("fCode").value.trim().toUpperCase(),k=$("fCareer").value.trim();
+    var ph=pendingPhoto||data.photo,err=$("err");
+    var miss=!ph?"Carga una foto de perfil.":!n?"Escribe tu nombre.":!c?"Escribe tu código de alumno.":!k?"Escribe tu carrera.":"";
+    if(miss){err.textContent=miss;err.hidden=false;return}
+    err.hidden=true;
+    data.name=n.toUpperCase();data.code=c;data.career=k.toUpperCase();data.photo=ph;
+    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
+    document.body.classList.remove("setup");
+    $("sheetHint").hidden=true;$("sheetTitle").textContent="Editar mis datos";
+    render();close();
+  };
+  if(!configured){
+    document.body.classList.add("setup");
+    $("sheetTitle").textContent="TIU VIRTUAL";$("sheetHint").hidden=false;
+    open();
+  }
+
+  // Pantalla completa
+  var de=document.documentElement,fsBtn=$("fs"),toast=document.createElement("div"),tt;
+  toast.className="toast";toast.hidden=true;document.body.appendChild(toast);
+  function say(t){toast.textContent=t;toast.hidden=false;clearTimeout(tt);tt=setTimeout(function(){toast.hidden=true},6500)}
+  var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone;
+  if(standalone)fsBtn.hidden=true;
+  function inFs(){return document.fullscreenElement||document.webkitFullscreenElement}
+  fsBtn.onclick=function(){
+    var req=de.requestFullscreen||de.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
+    if(inFs()){ex.call(document);return}
+    var tip="En iPhone: toca Compartir y elige \u201cA\u00f1adir a pantalla de inicio\u201d. Al abrirla desde ah\u00ed se ve a pantalla completa, sin barra del navegador.";
+    if(!req){say(tip);return}
+    try{
+      var r=req.call(de);
+      if(r&&r.catch)r.catch(function(){say(tip)});
+    }catch(e){say(tip)}
+  };
+})();
+</script>
+</body>
+</html>
